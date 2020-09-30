@@ -26,7 +26,8 @@ def response_tween_factory(handler, registry) -> t.Callable[[Request], Response]
     def excview_tween(request: Request) -> Response:
         try:
             response = handler(request)
-            if not request.environ.get("pyramid_openapi3.validate_response"):
+            if not request.environ.get("pyramid_openapi3.validate_response") or (
+                    request.headers.get('x-openapi3') == 'novalidate'):
                 # not an openapi view or response validation not requested
                 return response
             # validate response
